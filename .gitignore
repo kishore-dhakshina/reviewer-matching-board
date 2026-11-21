@@ -1,0 +1,22 @@
+
+# Angular dependencies
+frontend/node_modules/
+
+# Angular build files
+frontend/dist/
+frontend/.angular/
+
+# Environment files
+.env
+.env.*
+
+# CodeIgniter logs
+backend/application/logs/*
+!backend/application/logs/index.html
+
+# CodeIgniter cache
+backend/application/cache/*
+!backend/application/cache/index.html
+
+# Generated assignment data
+backend/storage/assignments.json

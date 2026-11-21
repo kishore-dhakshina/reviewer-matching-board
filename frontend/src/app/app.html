@@ -1,0 +1,141 @@
+
+<div class="container">
+
+  <h1>Reviewer Matching Board</h1>
+  <p class="subtitle">Select an article to find available reviewers.</p>
+
+   <!-- Common error message -->
+  @if (errorMessage) {
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+  }
+
+  <div class="board">
+    @if (errorMessage) {
+      <p class="error-message">
+        {{ errorMessage }}
+      </p>
+    }
+
+    <!-- Left side: Articles -->
+    <div class="articles-section">
+
+      <h2>Pending Articles</h2>
+
+      @if (loading) {
+        <p>Loading articles...</p>
+      } @else {
+
+        @for (article of articles; track article.id) {
+
+          <div
+            class="article-card"
+            [class.selected]="selectedArticle?.id === article.id"
+            (click)="selectArticle(article)"
+          >
+
+            <h3>{{ article.title }}</h3>
+
+            <p>
+              <strong>Author:</strong>
+              {{ article.author.name }}
+            </p>
+
+            <p>
+              <strong>Institution:</strong>
+              {{ article.author.institution }}
+            </p>
+
+          </div>
+
+        } @empty {
+          <p>No pending articles found.</p>
+        }
+
+      }
+
+    </div>
+
+    <!-- Right side: Reviewers -->
+    <div class="reviewers-section">
+
+      @if (selectedArticle) {
+
+        <h2>Available Reviewers</h2>
+
+        <p class="selected-article">
+          Selected Article: {{ selectedArticle.title }}
+        </p>
+        @if (assignmentMessage) {
+          <div
+            [class.success-message]="assignmentSuccess"
+            [class.error-message]="!assignmentSuccess"
+          >
+            {{ assignmentMessage }}
+          </div>
+        }
+
+        @for (reviewer of reviewers; track reviewer.id) {
+
+          <div class="reviewer-card">
+
+            <div class="reviewer-details">
+
+              <h3>{{ reviewer.name }}</h3>
+
+              <p>
+                <strong>Institution:</strong>
+                {{ reviewer.institution }}
+              </p>
+
+              <p>
+                <strong>Keywords:</strong>
+                {{ reviewer.keywords.join(', ') }}
+              </p>
+
+            </div>
+
+           @if (hasConflict(reviewer)) {
+
+              <div class="conflict-message">
+                Conflict of Interest
+              </div>
+
+            } @else if (isAlreadyAssigned(reviewer)) {
+
+              <div class="assigned-message">
+                Already Assigned
+              </div>
+
+            } @else {
+
+              <button
+                type="button"
+                (click)="assignReviewer(reviewer.id)"
+              >
+                Assign
+              </button>
+
+            }
+
+          </div>
+
+        } @empty {
+          <p>No reviewers found.</p>
+        }
+
+      } @else {
+
+        <div class="empty-message">
+          <h2>Select an Article</h2>
+          <p>Please select an article from the left side to view reviewers.</p>
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</div>
